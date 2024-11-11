@@ -66,6 +66,45 @@ internal static partial class Program
         return new DirectoryInfo(args[0]);
     }
 
+    /// <summary>
+    /// Search SDL3 bindings directory
+    /// Search order:
+    /// - `--bindings` arguments
+    /// - working directory
+    /// - working directory parents recursive search
+    /// </summary>
+    /// <param name="args">command line arguments</param>
+    /// <returns></returns>
+    private static FileInfo GetBindingsDirectory(string[] args)
+    {
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i] == "--bindings")
+            {
+                return new FileInfo(args[++i]);
+            }
+        }
+
+        var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+        while (currentDirectory is { Exists: false }) 
+        {
+            currentDirectory = currentDirectory.Parent;
+        }
+
+        while (currentDirectory != null) 
+        {
+            var potentialSdl3Dir = Path.Combine(currentDirectory.FullName, "SDL3");
+            if (Directory.Exists(potentialSdl3Dir))
+            {
+                return new FileInfo(potentialSdl3Dir);
+            }
+
+            currentDirectory = currentDirectory.Parent;
+        }
+
+        return new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "SDL3"));
+    }
+
     private static int Main(string[] args)
     {
         // PARSE INPUT
@@ -82,7 +121,7 @@ internal static partial class Program
         var sdlProjectName = CoreMode ? "SDL3.Core.csproj" : "SDL3.Legacy.csproj";
 
         var sdlDir = GetSDL3Directory(args);
-        var sdlBindingsDir = new FileInfo(Path.Combine(AppContext.BaseDirectory, "../../../../SDL3/"));
+        var sdlBindingsDir = GetBindingsDirectory(args);
         var sdlBindingsProjectFile = new FileInfo(Path.Combine(sdlBindingsDir.FullName, sdlProjectName));
         var ffiJsonFile = new FileInfo(Path.Combine(AppContext.BaseDirectory, "ffi.json"));
 
