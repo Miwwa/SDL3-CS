@@ -13,27 +13,18 @@ RUN apt install -y libclang-18-dev libclang-cpp18-dev cmake
 ENV CC="/usr/bin/clang-18" \
     CXX="/usr/bin/clang++-18"
 
-# Copy the source into the Docker container
-RUN mkdir -p /c2ffi
-RUN mkdir -p /SDL/include
-RUN mkdir -p /SDL3
-RUN mkdir -p /GenerateBindings
-
-COPY /c2ffi /c2ffi
-COPY /SDL/include /SDL/include
-COPY /SDL3 /SDL3
-COPY /GenerateBindings /GenerateBindings
-
 # Build c2ffi
-WORKDIR /
-RUN cd ./c2ffi && \
-    rm -rf build && mkdir -p build && cd build && \
+RUN mkdir -p /c2ffi
+COPY /c2ffi /c2ffi
+WORKDIR /c2ffi
+RUN rm -rf build && mkdir -p build && cd build && \
     cmake -DBUILD_CONFIG=Release .. && make
 
-# Generate ffi.json from sdl headers
-RUN /c2ffi/build/bin/c2ffi -i /SDL/include -o /GenerateBindings/assets/ffi.json /GenerateBindings/assets/ffi.h
-
+# Build GenerateBindings project
+RUN mkdir -p /GenerateBindings
+COPY /GenerateBindings /GenerateBindings
 WORKDIR /GenerateBindings
 RUN dotnet publish GenerateBindings.csproj -c Release
-RUN /GenerateBindings/bin/Release/net8.0/publish/GenerateBindings /SDL
-RUN /GenerateBindings/bin/Release/net8.0/publish/GenerateBindings /SDL --core
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
