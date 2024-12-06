@@ -106,7 +106,7 @@ namespace SDL3
 
 		private const string nativeLibName = "SDL3";
 
-		// /SDL/include/SDL3/SDL_stdinc.h
+		// ./SDL/include/SDL3/SDL_stdinc.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_malloc(UIntPtr size);
@@ -114,7 +114,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_free(IntPtr mem);
 
-		// /SDL/include/SDL3/SDL_assert.h
+		// ./SDL/include/SDL3/SDL_assert.h
 
 		public enum SDL_AssertState
 		{
@@ -168,7 +168,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_ResetAssertionReport();
 
-		// /SDL/include/SDL3/SDL_asyncio.h
+		// ./SDL/include/SDL3/SDL_asyncio.h
 
 		public enum SDL_AsyncIOTaskType
 		{
@@ -229,10 +229,10 @@ namespace SDL3
 		public static extern void SDL_DestroyAsyncIOQueue(IntPtr queue);
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern SDLBool SDL_GetAsyncIOResult(IntPtr queue, ref SDL_AsyncIOOutcome outcome); // WARN_UNKNOWN_POINTER_PARAMETER
+		public static extern SDLBool SDL_GetAsyncIOResult(IntPtr queue, IntPtr outcome); // WARN_UNKNOWN_POINTER_PARAMETER
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern SDLBool SDL_WaitAsyncIOResult(IntPtr queue, ref SDL_AsyncIOOutcome outcome, int timeoutMS); // WARN_UNKNOWN_POINTER_PARAMETER
+		public static extern SDLBool SDL_WaitAsyncIOResult(IntPtr queue, IntPtr outcome, int timeoutMS); // WARN_UNKNOWN_POINTER_PARAMETER
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_SignalAsyncIOQueue(IntPtr queue);
@@ -248,7 +248,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_atomic.h
+		// ./SDL/include/SDL3/SDL_atomic.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_TryLockSpinlock(IntPtr @lock);
@@ -307,12 +307,12 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetAtomicPointer(ref IntPtr a);
 
-		// /SDL/include/SDL3/SDL_endian.h
+		// ./SDL/include/SDL3/SDL_endian.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern float SDL_SwapFloat(float x);
 
-		// /SDL/include/SDL3/SDL_error.h
+		// ./SDL/include/SDL3/SDL_error.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_SetError", CallingConvention = CallingConvention.Cdecl)]
 		private static extern SDLBool INTERNAL_SDL_SetError(byte* fmt);
@@ -338,7 +338,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_ClearError();
 
-		// /SDL/include/SDL3/SDL_properties.h
+		// ./SDL/include/SDL3/SDL_properties.h
 
 		public enum SDL_PropertyType
 		{
@@ -535,7 +535,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_DestroyProperties(uint props);
 
-		// /SDL/include/SDL3/SDL_thread.h
+		// ./SDL/include/SDL3/SDL_thread.h
 
 		public const string SDL_PROP_THREAD_CREATE_ENTRY_FUNCTION_POINTER = "SDL.thread.create.entry_function";
 		public const string SDL_PROP_THREAD_CREATE_NAME_STRING = "SDL.thread.create.name";
@@ -601,7 +601,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_CleanupTLS();
 
-		// /SDL/include/SDL3/SDL_mutex.h
+		// ./SDL/include/SDL3/SDL_mutex.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_CreateMutex();
@@ -703,7 +703,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_SetInitialized(ref SDL_InitState state, SDLBool initialized);
 
-		// /SDL/include/SDL3/SDL_iostream.h
+		// ./SDL/include/SDL3/SDL_iostream.h
 
 		public const string SDL_PROP_IOSTREAM_WINDOWS_HANDLE_POINTER = "SDL.iostream.windows.handle";
 		public const string SDL_PROP_IOSTREAM_STDIO_FILE_POINTER = "SDL.iostream.stdio.file";
@@ -918,7 +918,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_WriteS64BE(IntPtr dst, long value);
 
-		// /SDL/include/SDL3/SDL_audio.h
+		// ./SDL/include/SDL3/SDL_audio.h
 
 		public enum SDL_AudioFormat
 		{
@@ -1139,7 +1139,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_GetSilenceValueForFormat(SDL_AudioFormat format);
 
-		// /SDL/include/SDL3/SDL_bits.h
+		// ./SDL/include/SDL3/SDL_bits.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_MostSignificantBitIndex32(uint x);
@@ -1147,7 +1147,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_HasExactlyOneBitSet32(uint x);
 
-		// /SDL/include/SDL3/SDL_blendmode.h
+		// ./SDL/include/SDL3/SDL_blendmode.h
 
 		public enum SDL_BlendOperation
 		{
@@ -1175,7 +1175,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern uint SDL_ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
-		// /SDL/include/SDL3/SDL_pixels.h
+		// ./SDL/include/SDL3/SDL_pixels.h
 
 		public enum SDL_PixelType
 		{
@@ -1498,7 +1498,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_GetRGBA(uint pixel, IntPtr format, IntPtr palette, out byte r, out byte g, out byte b, out byte a);
 
-		// /SDL/include/SDL3/SDL_rect.h
+		// ./SDL/include/SDL3/SDL_rect.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_Point
@@ -1586,7 +1586,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_GetRectAndLineIntersectionFloat(ref SDL_FRect rect, ref float X1, ref float Y1, ref float X2, ref float Y2);
 
-		// /SDL/include/SDL3/SDL_surface.h
+		// ./SDL/include/SDL3/SDL_surface.h
 
 		public const string SDL_PROP_SURFACE_SDR_WHITE_POINT_FLOAT = "SDL.surface.SDR_white_point";
 		public const string SDL_PROP_SURFACE_HDR_HEADROOM_FLOAT = "SDL.surface.HDR_headroom";
@@ -1814,7 +1814,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_WriteSurfacePixelFloat(IntPtr surface, int x, int y, float r, float g, float b, float a);
 
-		// /SDL/include/SDL3/SDL_camera.h
+		// ./SDL/include/SDL3/SDL_camera.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_CameraSpec
@@ -1891,7 +1891,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_CloseCamera(IntPtr camera);
 
-		// /SDL/include/SDL3/SDL_clipboard.h
+		// ./SDL/include/SDL3/SDL_clipboard.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_SetClipboardText", CallingConvention = CallingConvention.Cdecl)]
 		private static extern SDLBool INTERNAL_SDL_SetClipboardText(byte* text);
@@ -1972,7 +1972,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetClipboardMimeTypes(out UIntPtr num_mime_types);
 
-		// /SDL/include/SDL3/SDL_cpuinfo.h
+		// ./SDL/include/SDL3/SDL_cpuinfo.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_GetNumLogicalCPUCores();
@@ -2028,7 +2028,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern UIntPtr SDL_GetSIMDAlignment();
 
-		// /SDL/include/SDL3/SDL_video.h
+		// ./SDL/include/SDL3/SDL_video.h
 
 		public const string SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER = "SDL.video.wayland.wl_display";
 		public const string SDL_PROP_DISPLAY_HDR_ENABLED_BOOLEAN = "SDL.display.HDR_enabled";
@@ -2263,7 +2263,7 @@ namespace SDL3
 		public static extern IntPtr SDL_GetFullscreenDisplayModes(uint displayID, out int count);
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern SDLBool SDL_GetClosestFullscreenDisplayMode(uint displayID, int w, int h, float refresh_rate, SDLBool include_high_density_modes, ref SDL_DisplayMode closest); // WARN_UNKNOWN_POINTER_PARAMETER
+		public static extern SDLBool SDL_GetClosestFullscreenDisplayMode(uint displayID, int w, int h, float refresh_rate, SDLBool include_high_density_modes, IntPtr closest); // WARN_UNKNOWN_POINTER_PARAMETER
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetDesktopDisplayMode(uint displayID);
@@ -2616,7 +2616,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_GL_DestroyContext(IntPtr context);
 
-		// /SDL/include/SDL3/SDL_dialog.h
+		// ./SDL/include/SDL3/SDL_dialog.h
 
 		public const string SDL_PROP_FILE_DIALOG_FILTERS_POINTER = "SDL.filedialog.filters";
 		public const string SDL_PROP_FILE_DIALOG_NFILTERS_NUMBER = "SDL.filedialog.nfilters";
@@ -2677,7 +2677,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_ShowFileDialogWithProperties(SDL_FileDialogType type, SDL_DialogFileCallback callback, IntPtr userdata, uint props);
 
-		// /SDL/include/SDL3/SDL_guid.h
+		// ./SDL/include/SDL3/SDL_guid.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_GUID
@@ -2706,7 +2706,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_power.h
+		// ./SDL/include/SDL3/SDL_power.h
 
 		public enum SDL_PowerState
 		{
@@ -2721,7 +2721,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDL_PowerState SDL_GetPowerInfo(out int seconds, out int percent);
 
-		// /SDL/include/SDL3/SDL_sensor.h
+		// ./SDL/include/SDL3/SDL_sensor.h
 
 		public enum SDL_SensorType
 		{
@@ -2785,7 +2785,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_UpdateSensors();
 
-		// /SDL/include/SDL3/SDL_joystick.h
+		// ./SDL/include/SDL3/SDL_joystick.h
 
 		public const string SDL_PROP_JOYSTICK_CAP_MONO_LED_BOOLEAN = "SDL.joystick.cap.mono_led";
 		public const string SDL_PROP_JOYSTICK_CAP_RGB_LED_BOOLEAN = "SDL.joystick.cap.rgb_led";
@@ -3055,7 +3055,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDL_PowerState SDL_GetJoystickPowerInfo(IntPtr joystick, out int percent);
 
-		// /SDL/include/SDL3/SDL_gamepad.h
+		// ./SDL/include/SDL3/SDL_gamepad.h
 
 		public enum SDL_GamepadType
 		{
@@ -3499,7 +3499,7 @@ namespace SDL3
 			return DecodeFromUTF8(INTERNAL_SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad, axis));
 		}
 
-		// /SDL/include/SDL3/SDL_scancode.h
+		// ./SDL/include/SDL3/SDL_scancode.h
 
 		public enum SDL_Scancode
 		{
@@ -3754,7 +3754,7 @@ namespace SDL3
 			SDL_SCANCODE_COUNT = 512,
 		}
 
-		// /SDL/include/SDL3/SDL_keycode.h
+		// ./SDL/include/SDL3/SDL_keycode.h
 
 		public enum SDL_Keycode : uint
 		{
@@ -4032,7 +4032,7 @@ namespace SDL3
 			SDL_KMOD_GUI = SDL_KMOD_RGUI | SDL_KMOD_LGUI,
 		}
 
-		// /SDL/include/SDL3/SDL_keyboard.h
+		// ./SDL/include/SDL3/SDL_keyboard.h
 
 		public const string SDL_PROP_TEXTINPUT_TYPE_NUMBER = "SDL.textinput.type";
 		public const string SDL_PROP_TEXTINPUT_CAPITALIZATION_NUMBER = "SDL.textinput.capitalization";
@@ -4169,7 +4169,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_ScreenKeyboardShown(IntPtr window);
 
-		// /SDL/include/SDL3/SDL_mouse.h
+		// ./SDL/include/SDL3/SDL_mouse.h
 
 		public enum SDL_SystemCursor
 		{
@@ -4282,7 +4282,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_CursorVisible();
 
-		// /SDL/include/SDL3/SDL_pen.h
+		// ./SDL/include/SDL3/SDL_pen.h
 
 		[Flags]
 		public enum SDL_PenInputFlags : uint
@@ -4308,7 +4308,7 @@ namespace SDL3
 			SDL_PEN_AXIS_COUNT = 7,
 		}
 
-		// /SDL/include/SDL3/SDL_touch.h
+		// ./SDL/include/SDL3/SDL_touch.h
 
 		public enum SDL_TouchDeviceType
 		{
@@ -4343,7 +4343,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetTouchFingers(ulong touchID, out int count);
 
-		// /SDL/include/SDL3/SDL_events.h
+		// ./SDL/include/SDL3/SDL_events.h
 
 		public enum SDL_EventType
 		{
@@ -5073,7 +5073,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetWindowFromEvent(ref SDL_Event @event);
 
-		// /SDL/include/SDL3/SDL_filesystem.h
+		// ./SDL/include/SDL3/SDL_filesystem.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_GetBasePath", CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_GetBasePath();
@@ -5242,7 +5242,7 @@ namespace SDL3
 			return DecodeFromUTF8(INTERNAL_SDL_GetCurrentDirectory()); // WARN_UNKNOWN_RETURNED_CHAR_PTR_MEMORY_OWNER
 		}
 
-		// /SDL/include/SDL3/SDL_gpu.h
+		// ./SDL/include/SDL3/SDL_gpu.h
 
 		public const string SDL_PROP_GPU_CREATETEXTURE_D3D12_CLEAR_R_FLOAT = "SDL.gpu.createtexture.d3d12.clear.r";
 		public const string SDL_PROP_GPU_CREATETEXTURE_D3D12_CLEAR_G_FLOAT = "SDL.gpu.createtexture.d3d12.clear.g";
@@ -6350,7 +6350,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern uint SDL_CalculateGPUTextureFormatSize(SDL_GPUTextureFormat format, uint width, uint height, uint depth_or_layer_count);
 
-		// /SDL/include/SDL3/SDL_haptic.h
+		// ./SDL/include/SDL3/SDL_haptic.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_HapticDirection
@@ -6576,7 +6576,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_StopHapticRumble(IntPtr haptic);
 
-		// /SDL/include/SDL3/SDL_hidapi.h
+		// ./SDL/include/SDL3/SDL_hidapi.h
 
 		public enum SDL_hid_bus_type
 		{
@@ -6721,7 +6721,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_hid_ble_scan(SDLBool active);
 
-		// /SDL/include/SDL3/SDL_hints.h
+		// ./SDL/include/SDL3/SDL_hints.h
 
 		public const string SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED = "SDL_ALLOW_ALT_TAB_WHILE_GRABBED";
 		public const string SDL_HINT_ANDROID_ALLOW_RECREATE_ACTIVITY = "SDL_ANDROID_ALLOW_RECREATE_ACTIVITY";
@@ -7049,7 +7049,7 @@ namespace SDL3
 			SDL_free((IntPtr) nameUTF8);
 		}
 
-		// /SDL/include/SDL3/SDL_init.h
+		// ./SDL/include/SDL3/SDL_init.h
 
 		public const string SDL_PROP_APP_METADATA_NAME_STRING = "SDL.app.metadata.name";
 		public const string SDL_PROP_APP_METADATA_VERSION_STRING = "SDL.app.metadata.version";
@@ -7110,7 +7110,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_IsMainThread();
 
-		// public static delegate RETURN SDL_MainThreadCallback(PARAMS) // WARN_UNDEFINED_FUNCTION_POINTER: /SDL/include/SDL3/SDL_init.h:271:24
+		// public delegate WARN_PLACEHOLDER SDL_MainThreadCallback();
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_RunOnMainThread(SDL_MainThreadCallback callback, IntPtr userdata, SDLBool wait_complete);
@@ -7154,7 +7154,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_loadso.h
+		// ./SDL/include/SDL3/SDL_loadso.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_LoadObject", CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_LoadObject(byte* sofile);
@@ -7181,7 +7181,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_UnloadObject(IntPtr handle);
 
-		// /SDL/include/SDL3/SDL_locale.h
+		// ./SDL/include/SDL3/SDL_locale.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_Locale
@@ -7193,7 +7193,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_GetPreferredLocales(out int count);
 
-		// /SDL/include/SDL3/SDL_log.h
+		// ./SDL/include/SDL3/SDL_log.h
 
 		public enum SDL_LogCategory
 		{
@@ -7357,7 +7357,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_SetLogOutputFunction(SDL_LogOutputFunction callback, IntPtr userdata);
 
-		// /SDL/include/SDL3/SDL_messagebox.h
+		// ./SDL/include/SDL3/SDL_messagebox.h
 
 		[Flags]
 		public enum SDL_MessageBoxFlags : uint
@@ -7440,7 +7440,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_metal.h
+		// ./SDL/include/SDL3/SDL_metal.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_Metal_CreateView(IntPtr window);
@@ -7451,7 +7451,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr SDL_Metal_GetLayer(IntPtr view);
 
-		// /SDL/include/SDL3/SDL_misc.h
+		// ./SDL/include/SDL3/SDL_misc.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_OpenURL", CallingConvention = CallingConvention.Cdecl)]
 		private static extern SDLBool INTERNAL_SDL_OpenURL(byte* url);
@@ -7464,7 +7464,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_platform.h
+		// ./SDL/include/SDL3/SDL_platform.h
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_GetPlatform", CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_GetPlatform();
@@ -7473,7 +7473,7 @@ namespace SDL3
 			return DecodeFromUTF8(INTERNAL_SDL_GetPlatform());
 		}
 
-		// /SDL/include/SDL3/SDL_process.h
+		// ./SDL/include/SDL3/SDL_process.h
 
 		public const string SDL_PROP_PROCESS_CREATE_ARGS_POINTER = "SDL.process.create.args";
 		public const string SDL_PROP_PROCESS_CREATE_ENVIRONMENT_POINTER = "SDL.process.create.environment";
@@ -7526,7 +7526,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_DestroyProcess(IntPtr process);
 
-		// /SDL/include/SDL3/SDL_render.h
+		// ./SDL/include/SDL3/SDL_render.h
 
 		public const string SDL_PROP_RENDERER_CREATE_NAME_STRING = "SDL.renderer.create.name";
 		public const string SDL_PROP_RENDERER_CREATE_WINDOW_POINTER = "SDL.renderer.create.window";
@@ -7938,7 +7938,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_storage.h
+		// ./SDL/include/SDL3/SDL_storage.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_StorageInterface
@@ -8120,7 +8120,7 @@ namespace SDL3
 			return result;
 		}
 
-		// /SDL/include/SDL3/SDL_system.h
+		// ./SDL/include/SDL3/SDL_system.h
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate bool SDL_X11EventHook(IntPtr userdata, IntPtr xevent);
@@ -8170,7 +8170,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_OnApplicationDidEnterForeground();
 
-		// /SDL/include/SDL3/SDL_time.h
+		// ./SDL/include/SDL3/SDL_time.h
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_DateTime
@@ -8226,7 +8226,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_GetDayOfWeek(int year, int month, int day);
 
-		// /SDL/include/SDL3/SDL_timer.h
+		// ./SDL/include/SDL3/SDL_timer.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern ulong SDL_GetTicks();
@@ -8264,7 +8264,7 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_RemoveTimer(uint id);
 
-		// /SDL/include/SDL3/SDL_version.h
+		// ./SDL/include/SDL3/SDL_version.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_GetVersion();
@@ -8276,7 +8276,7 @@ namespace SDL3
 			return DecodeFromUTF8(INTERNAL_SDL_GetRevision());
 		}
 
-		// /SDL/include/SDL3/SDL_main.h
+		// ./SDL/include/SDL3/SDL_main.h
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate int SDL_main_func(int argc, IntPtr argv);

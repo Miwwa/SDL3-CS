@@ -528,6 +528,9 @@ internal static class UserProvidedData
         { ("SDL_DateTimeToTime", "dt"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_time.h:146:34
         { ("SDL_TimeToWindows", "dwLowDateTime"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_time.h:162:34
         { ("SDL_TimeToWindows", "dwHighDateTime"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_time.h:162:34
+        { ("SDL_GetAsyncIOResult", "outcome"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_asyncio.h:440:34
+        { ("SDL_WaitAsyncIOResult", "outcome"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_asyncio.h:484:34
+        { ("SDL_GetClosestFullscreenDisplayMode", "closest"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_video.h:708:34
     };
 
     internal static readonly Dictionary<string, ReturnedCharPtrMemoryOwner> ReturnedCharPtrMemoryOwners = new()
@@ -587,6 +590,7 @@ internal static class UserProvidedData
         { "SDL_GetRenderDriver", ReturnedCharPtrMemoryOwner.SDL }, // /usr/local/include/SDL3/SDL_render.h:172:42
         { "SDL_GetRendererName", ReturnedCharPtrMemoryOwner.SDL }, // /usr/local/include/SDL3/SDL_render.h:354:42
         { "SDL_GetRevision", ReturnedCharPtrMemoryOwner.SDL }, // /usr/local/include/SDL3/SDL_version.h:172:42
+        { "SDL_GetCurrentDirectory", ReturnedCharPtrMemoryOwner.Unknown }, // ./SDL/include/SDL3/SDL_filesystem.h:466:36
     };
 
     internal static readonly Dictionary<string, DelegateDefinition> DelegateDefinitions = new()
@@ -616,6 +620,7 @@ internal static class UserProvidedData
         { "SDL_TimerCallback", new DelegateDefinition { ReturnType = "uint", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("uint", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:158:26
         { "SDL_NSTimerCallback", new DelegateDefinition { ReturnType = "ulong", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("ulong", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:220:26
         { "SDL_main_func", new DelegateDefinition { ReturnType = "int", Parameters = [("int", "argc"), ("IntPtr", "argv")] } }, // /usr/local/include/SDL3/SDL_main.h:399:23
+        { "SDL_MainThreadCallback", new DelegateDefinition { ReturnType = "WARN_PLACEHOLDER", Parameters = [] } }, // ./SDL/include/SDL3/SDL_init.h:271:24
     };
 
     internal static readonly Dictionary<string, string[]> FlagEnumDefinitions = new()
