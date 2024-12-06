@@ -168,6 +168,86 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_ResetAssertionReport();
 
+		// /SDL/include/SDL3/SDL_asyncio.h
+
+		public enum SDL_AsyncIOTaskType
+		{
+			SDL_ASYNCIO_TASK_READ = 0,
+			SDL_ASYNCIO_TASK_WRITE = 1,
+			SDL_ASYNCIO_TASK_CLOSE = 2,
+		}
+
+		public enum SDL_AsyncIOResult
+		{
+			SDL_ASYNCIO_COMPLETE = 0,
+			SDL_ASYNCIO_FAILURE = 1,
+			SDL_ASYNCIO_CANCELLED = 2,
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct SDL_AsyncIOOutcome
+		{
+			public IntPtr asyncio;
+			public SDL_AsyncIOTaskType type;
+			public SDL_AsyncIOResult result;
+			public IntPtr buffer;
+			public ulong offset;
+			public ulong bytes_requested;
+			public ulong bytes_transferred;
+			public IntPtr userdata;
+		}
+
+		[DllImport(nativeLibName, EntryPoint = "SDL_AsyncIOFromFile", CallingConvention = CallingConvention.Cdecl)]
+		private static extern IntPtr INTERNAL_SDL_AsyncIOFromFile(byte* file, byte* mode);
+		public static IntPtr SDL_AsyncIOFromFile(string file, string mode)
+		{
+			var fileUTF8 = EncodeAsUTF8(file);
+			var modeUTF8 = EncodeAsUTF8(mode);
+			var result = INTERNAL_SDL_AsyncIOFromFile(fileUTF8, modeUTF8);
+
+			SDL_free((IntPtr) fileUTF8);
+			SDL_free((IntPtr) modeUTF8);
+			return result;
+		}
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern long SDL_GetAsyncIOSize(IntPtr asyncio);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_ReadAsyncIO(IntPtr asyncio, IntPtr ptr, ulong offset, ulong size, IntPtr queue, IntPtr userdata);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_WriteAsyncIO(IntPtr asyncio, IntPtr ptr, ulong offset, ulong size, IntPtr queue, IntPtr userdata);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_CloseAsyncIO(IntPtr asyncio, SDLBool flush, IntPtr queue, IntPtr userdata);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr SDL_CreateAsyncIOQueue();
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SDL_DestroyAsyncIOQueue(IntPtr queue);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_GetAsyncIOResult(IntPtr queue, ref SDL_AsyncIOOutcome outcome); // WARN_UNKNOWN_POINTER_PARAMETER
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_WaitAsyncIOResult(IntPtr queue, ref SDL_AsyncIOOutcome outcome, int timeoutMS); // WARN_UNKNOWN_POINTER_PARAMETER
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SDL_SignalAsyncIOQueue(IntPtr queue);
+
+		[DllImport(nativeLibName, EntryPoint = "SDL_LoadFileAsync", CallingConvention = CallingConvention.Cdecl)]
+		private static extern SDLBool INTERNAL_SDL_LoadFileAsync(byte* file, IntPtr queue, IntPtr userdata);
+		public static SDLBool SDL_LoadFileAsync(string file, IntPtr queue, IntPtr userdata)
+		{
+			var fileUTF8 = EncodeAsUTF8(file);
+			var result = INTERNAL_SDL_LoadFileAsync(fileUTF8, queue, userdata);
+
+			SDL_free((IntPtr) fileUTF8);
+			return result;
+		}
+
 		// /SDL/include/SDL3/SDL_atomic.h
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
@@ -902,6 +982,12 @@ namespace SDL3
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern uint SDL_OpenAudioDevice(uint devid, ref SDL_AudioSpec spec);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_IsAudioDevicePhysical(uint devid);
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_IsAudioDevicePlayback(uint devid);
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_PauseAudioDevice(uint dev);
@@ -2532,6 +2618,15 @@ namespace SDL3
 
 		// /SDL/include/SDL3/SDL_dialog.h
 
+		public const string SDL_PROP_FILE_DIALOG_FILTERS_POINTER = "SDL.filedialog.filters";
+		public const string SDL_PROP_FILE_DIALOG_NFILTERS_NUMBER = "SDL.filedialog.nfilters";
+		public const string SDL_PROP_FILE_DIALOG_WINDOW_POINTER = "SDL.filedialog.window";
+		public const string SDL_PROP_FILE_DIALOG_LOCATION_STRING = "SDL.filedialog.location";
+		public const string SDL_PROP_FILE_DIALOG_MANY_BOOLEAN = "SDL.filedialog.many";
+		public const string SDL_PROP_FILE_DIALOG_TITLE_STRING = "SDL.filedialog.title";
+		public const string SDL_PROP_FILE_DIALOG_ACCEPT_STRING = "SDL.filedialog.accept";
+		public const string SDL_PROP_FILE_DIALOG_CANCEL_STRING = "SDL.filedialog.cancel";
+
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_DialogFileFilter
 		{
@@ -2571,6 +2666,16 @@ namespace SDL3
 
 			SDL_free((IntPtr) default_locationUTF8);
 		}
+
+		public enum SDL_FileDialogType
+		{
+			SDL_FILEDIALOG_OPENFILE = 0,
+			SDL_FILEDIALOG_SAVEFILE = 1,
+			SDL_FILEDIALOG_OPENFOLDER = 2,
+		}
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SDL_ShowFileDialogWithProperties(SDL_FileDialogType type, SDL_DialogFileCallback callback, IntPtr userdata, uint props);
 
 		// /SDL/include/SDL3/SDL_guid.h
 
@@ -4671,6 +4776,15 @@ namespace SDL3
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
+		public struct SDL_RenderEvent
+		{
+			public SDL_EventType type;
+			public uint reserved;
+			public ulong timestamp;
+			public uint windowID;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
 		public struct SDL_TouchFingerEvent
 		{
 			public SDL_EventType type;
@@ -4882,6 +4996,8 @@ namespace SDL3
 			public SDL_PenButtonEvent pbutton;
 			[FieldOffset(0)]
 			public SDL_PenAxisEvent paxis;
+			[FieldOffset(0)]
+			public SDL_RenderEvent render;
 			[FieldOffset(0)]
 			public SDL_DropEvent drop;
 			[FieldOffset(0)]
@@ -5117,6 +5233,13 @@ namespace SDL3
 			SDL_free((IntPtr) pathUTF8);
 			SDL_free((IntPtr) patternUTF8);
 			return result;
+		}
+
+		[DllImport(nativeLibName, EntryPoint = "SDL_GetCurrentDirectory", CallingConvention = CallingConvention.Cdecl)]
+		private static extern IntPtr INTERNAL_SDL_GetCurrentDirectory();
+		public static string SDL_GetCurrentDirectory()
+		{
+			return DecodeFromUTF8(INTERNAL_SDL_GetCurrentDirectory()); // WARN_UNKNOWN_RETURNED_CHAR_PTR_MEMORY_OWNER
 		}
 
 		// /SDL/include/SDL3/SDL_gpu.h
@@ -6689,6 +6812,7 @@ namespace SDL3
 		public const string SDL_HINT_JOYSTICK_HIDAPI_SHIELD = "SDL_JOYSTICK_HIDAPI_SHIELD";
 		public const string SDL_HINT_JOYSTICK_HIDAPI_STADIA = "SDL_JOYSTICK_HIDAPI_STADIA";
 		public const string SDL_HINT_JOYSTICK_HIDAPI_STEAM = "SDL_JOYSTICK_HIDAPI_STEAM";
+		public const string SDL_HINT_JOYSTICK_HIDAPI_STEAM_HOME_LED = "SDL_JOYSTICK_HIDAPI_STEAM_HOME_LED";
 		public const string SDL_HINT_JOYSTICK_HIDAPI_STEAMDECK = "SDL_JOYSTICK_HIDAPI_STEAMDECK";
 		public const string SDL_HINT_JOYSTICK_HIDAPI_STEAM_HORI = "SDL_JOYSTICK_HIDAPI_STEAM_HORI";
 		public const string SDL_HINT_JOYSTICK_HIDAPI_SWITCH = "SDL_JOYSTICK_HIDAPI_SWITCH";
@@ -6731,6 +6855,7 @@ namespace SDL3
 		public const string SDL_HINT_MOUSE_AUTO_CAPTURE = "SDL_MOUSE_AUTO_CAPTURE";
 		public const string SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS = "SDL_MOUSE_DOUBLE_CLICK_RADIUS";
 		public const string SDL_HINT_MOUSE_DOUBLE_CLICK_TIME = "SDL_MOUSE_DOUBLE_CLICK_TIME";
+		public const string SDL_HINT_MOUSE_DEFAULT_SYSTEM_CURSOR = "SDL_MOUSE_DEFAULT_SYSTEM_CURSOR";
 		public const string SDL_HINT_MOUSE_EMULATE_WARP_WITH_RELATIVE = "SDL_MOUSE_EMULATE_WARP_WITH_RELATIVE";
 		public const string SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH = "SDL_MOUSE_FOCUS_CLICKTHROUGH";
 		public const string SDL_HINT_MOUSE_NORMAL_SPEED_SCALE = "SDL_MOUSE_NORMAL_SPEED_SCALE";
@@ -6981,6 +7106,14 @@ namespace SDL3
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SDL_Quit();
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_IsMainThread();
+
+		// public static delegate RETURN SDL_MainThreadCallback(PARAMS) // WARN_UNDEFINED_FUNCTION_POINTER: /SDL/include/SDL3/SDL_init.h:271:24
+
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern SDLBool SDL_RunOnMainThread(SDL_MainThreadCallback callback, IntPtr userdata, SDLBool wait_complete);
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_SetAppMetadata", CallingConvention = CallingConvention.Cdecl)]
 		private static extern SDLBool INTERNAL_SDL_SetAppMetadata(byte* appname, byte* appversion, byte* appidentifier);
