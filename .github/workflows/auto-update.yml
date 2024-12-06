@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Update submodules
-        run: cd SDL && git pull origin main --ff-only
+      - name: Update SDL submodule
+        run: git submodule update --remote SDL
       - name: Build docker image
         run: docker build -t sdl3-gen .
       - name: Run docker container
