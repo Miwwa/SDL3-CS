@@ -684,6 +684,46 @@ internal static partial class Program
             }
         }
 
+        bool hasUnknownData = false;
+        if (unknownPointerParameters.Length > 0)
+        {
+            Console.Error.Write($"new pointer parameters (add these to `PointerParametersIntents` in UserProvidedData.cs:\n{unknownPointerParameters}\n");
+            hasUnknownData = true;
+        }
+        if (unknownReturnedCharPtrMemoryOwners.Length > 0)
+        {
+            Console.Error.Write(
+                $"new returned char pointers (add these to `ReturnedCharPtrMemoryOwners` in UserProvidedData.cs:\n{unknownReturnedCharPtrMemoryOwners}\n"
+            );
+            hasUnknownData = true;
+        }
+        if (undefinedFunctionPointers.Length > 0)
+        {
+            Console.Error.Write(
+                $"new undefined function pointers (add these to `DelegateDefinitions` in UserProvidedData.cs:\n{undefinedFunctionPointers}\n"
+            );
+            hasUnknownData = true;
+        }
+        if (unpopulatedFlagDefinitions.Length > 0)
+        {
+            Console.Error.Write($"new unpopulated flag enums (add these to `FlagEnumDefinitions` in UserProvidedData.cs:\n{unpopulatedFlagDefinitions}\n");
+            hasUnknownData = true;
+        }
+        if (UnusedUserProvidedTypes.Count > 0)
+        {
+            Console.Error.Write("unused definitions in UserProvidedData.cs:\n");
+            foreach (var definition in UnusedUserProvidedTypes)
+            {
+                Console.Error.Write($"{definition}\n");
+            }
+            hasUnknownData = true;
+        }
+
+        if (hasUnknownData)
+        {
+            return 1;
+        }
+
         var outputFilename = CoreMode ? "SDL3.Core.cs" : "SDL3.Legacy.cs";
 
         File.WriteAllText(
@@ -692,38 +732,6 @@ internal static partial class Program
         );
 
         RunProcess(dotnetExe, args: $"format {sdlBindingsProjectFile}");
-        if (unknownPointerParameters.Length > 0)
-        {
-            Console.Write($"new pointer parameters (add these to `PointerParametersIntents` in UserProvidedData.cs:\n{unknownPointerParameters}\n");
-        }
-
-        if (unknownReturnedCharPtrMemoryOwners.Length > 0)
-        {
-            Console.Write(
-                $"new returned char pointers (add these to `ReturnedCharPtrMemoryOwners` in UserProvidedData.cs:\n{unknownReturnedCharPtrMemoryOwners}\n"
-            );
-        }
-
-        if (undefinedFunctionPointers.Length > 0)
-        {
-            Console.Write(
-                $"new undefined function pointers (add these to `DelegateDefinitions` in UserProvidedData.cs:\n{undefinedFunctionPointers}\n"
-            );
-        }
-
-        if (unpopulatedFlagDefinitions.Length > 0)
-        {
-            Console.Write($"new unpopulated flag enums (add these to `FlagEnumDefinitions` in UserProvidedData.cs:\n{unpopulatedFlagDefinitions}\n");
-        }
-
-        if (UnusedUserProvidedTypes.Count > 0)
-        {
-            Console.Write("unused definitions in UserProvidedData.cs:\n");
-            foreach (var definition in UnusedUserProvidedTypes)
-            {
-                Console.Write($"{definition}\n");
-            }
-        }
 
         return 0;
     }
