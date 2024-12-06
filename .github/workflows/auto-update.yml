@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: 
+        with:
           submodules: true
       - name: Update submodules
-        run: cd SDL && git pull origin main
+        run: cd SDL && git pull origin main --ff-only
       - name: Build docker image
         run: docker build -t sdl3-gen .
       - name: Run docker container
@@ -22,6 +22,7 @@ jobs:
   build:
     name: Build lib
     runs-on: ubuntu-latest
+    needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
       - name: dotnet build GenerateBindings
