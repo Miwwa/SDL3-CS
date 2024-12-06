@@ -14,10 +14,18 @@ jobs:
           submodules: true
       - name: Update SDL submodule
         run: git submodule update --remote SDL
-      - name: Build docker image
-        run: docker build -t sdl3-gen .
-      - name: Run docker container
-        run: docker run --rm -v .:/app -w /app sdl3-gen
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: miwwa/sdl3-gen:latest
+          cache-from: type=registry,ref=user/app:buildcache
+          cache-to: type=registry,ref=user/app:buildcache,mode=max
+      - name: Generate sources
+        run: docker run --rm -v .:/app -w /app --name sdl3-cs miwwa/sdl3-gen:latest
   
   build:
     name: Build lib
