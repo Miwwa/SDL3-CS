@@ -1,12 +1,7 @@
 ﻿
 docker: submodules
-	docker build -t sdl3cs_image .
-	docker run --name sdl3cs sdl3cs_image
-	docker cp sdl3cs:/GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.json
-	docker cp sdl3cs:/SDL3/SDL3.Core.cs ./SDL3/SDL3.Core.cs
-	docker cp sdl3cs:/SDL3/SDL3.Legacy.cs ./SDL3/SDL3.Legacy.cs
-	docker rm sdl3cs
-	docker rmi sdl3cs_image
+	docker build -t sdl3-gen .
+	docker run --rm -v .:/app -w /app --name sdl3-cs -it sdl3-gen 
 
 submodules:
 	git submodule update --init
