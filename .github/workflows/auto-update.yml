@@ -1,0 +1,38 @@
+name: Auto update
+
+# Run only manually for now
+# todo: automate updates for SDL3 releases 
+on: [ workflow_dispatch ]
+
+jobs:
+  generate:
+    name: Generate bindings
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          submodules: true
+      - name: Update submodules
+        run: cd SDL && git pull origin main
+      - name: Build docker image
+        run: docker build -t sdl3-gen .
+      - name: Run docker container
+        run: docker run --rm -v .:/app -w /app -it sdl3-gen
+  
+  build:
+    name: Build lib
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: dotnet build GenerateBindings
+        run: |
+          dotnet build GenerateBindings -c Debug
+          dotnet build GenerateBindings -c Release
+      - name: msbuild SDL3
+        run: |
+          msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Debug
+          msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
+      - name: dotnet build SDL3.Core
+        run: |
+          dotnet build SDL3/SDL3.Core.csproj -c Debug
+          dotnet build SDL3/SDL3.Core.csproj -c Release

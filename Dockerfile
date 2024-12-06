@@ -27,4 +27,5 @@ WORKDIR /GenerateBindings
 RUN dotnet publish GenerateBindings.csproj -c Release
 
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
