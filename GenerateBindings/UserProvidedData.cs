@@ -620,7 +620,7 @@ internal static class UserProvidedData
         { "SDL_TimerCallback", new DelegateDefinition { ReturnType = "uint", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("uint", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:158:26
         { "SDL_NSTimerCallback", new DelegateDefinition { ReturnType = "ulong", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("ulong", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:220:26
         { "SDL_main_func", new DelegateDefinition { ReturnType = "int", Parameters = [("int", "argc"), ("IntPtr", "argv")] } }, // /usr/local/include/SDL3/SDL_main.h:399:23
-        { "SDL_MainThreadCallback", new DelegateDefinition { ReturnType = "WARN_PLACEHOLDER", Parameters = [] } }, // ./SDL/include/SDL3/SDL_init.h:271:24
+        { "SDL_MainThreadCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata")] } }, // ./SDL/include/SDL3/SDL_init.h:271:24
     };
 
     internal static readonly Dictionary<string, string[]> FlagEnumDefinitions = new()

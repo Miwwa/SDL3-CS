@@ -7110,7 +7110,8 @@ namespace SDL3
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_IsMainThread();
 
-		// public delegate WARN_PLACEHOLDER SDL_MainThreadCallback();
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		public delegate void SDL_MainThreadCallback(IntPtr userdata);
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern SDLBool SDL_RunOnMainThread(SDL_MainThreadCallback callback, IntPtr userdata, SDLBool wait_complete);

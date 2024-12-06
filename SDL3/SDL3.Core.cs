@@ -7141,7 +7141,8 @@ public static unsafe partial class SDL
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 	public static partial SDLBool SDL_IsMainThread();
 
-	// public delegate WARN_PLACEHOLDER SDL_MainThreadCallback();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate void SDL_MainThreadCallback(IntPtr userdata);
 
 	[LibraryImport(nativeLibName)]
 	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

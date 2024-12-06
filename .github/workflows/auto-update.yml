@@ -26,14 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: dotnet build GenerateBindings
-        run: |
-          dotnet build GenerateBindings -c Debug
-          dotnet build GenerateBindings -c Release
+        run: dotnet build GenerateBindings -c Release
       - name: msbuild SDL3
-        run: |
-          msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Debug
-          msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
+        run:  msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
       - name: dotnet build SDL3.Core
-        run: |
-          dotnet build SDL3/SDL3.Core.csproj -c Debug
-          dotnet build SDL3/SDL3.Core.csproj -c Release
+        run: dotnet build SDL3/SDL3.Core.csproj -c Release
