@@ -41,6 +41,12 @@ jobs:
         run: git submodule update --remote SDL
       - name: Generate sources
         run: docker run --rm -v .:/app -w /app --name sdl3-cs ghcr.io/miwwa/sdl3-gen:latest
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdl3-gen
+          path: |
+            SDL3
+            GenerateBindings
   
   build-lib:
     name: Build lib
@@ -48,9 +54,20 @@ jobs:
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: sdl3-gen          
+      
+      - name: Display structure of downloaded files
+        run: ls -R
+      
       - name: dotnet build GenerateBindings
         run: dotnet build GenerateBindings -c Release
+      
       - name: msbuild SDL3
         run: msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
+      
       - name: dotnet build SDL3.Core
         run: dotnet build SDL3/SDL3.Core.csproj -c Release
