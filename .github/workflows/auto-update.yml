@@ -35,6 +35,7 @@ jobs:
     needs: [ build-dockerfile ]
     env: 
       SDL_REPO: https://github.com/libsdl-org/SDL
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Setup .Net 8
         uses: actions/setup-dotnet@v4
