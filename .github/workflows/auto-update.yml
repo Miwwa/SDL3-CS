@@ -78,16 +78,16 @@ jobs:
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
-        
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: update SDL
-          title: [Automatic] Update SDL
+          title: "[ Automatic ] Update SDL"
           branch: sdl-update
           delete-branch: true
           body: |
-            Automatic SDL bindings update
+            Automatic SDL binding
