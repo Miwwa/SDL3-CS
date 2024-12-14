@@ -48,11 +48,6 @@ jobs:
       - name: Update SDL submodule
         run: git submodule update --remote SDL
 
-      - name: Commit submodule update
-        run: |
-          git add SDL
-          git commit -m "SDL submodule update"
-
       - name: Generate sources
         run: docker run --rm -v .:/app -w /app --name sdl3-cs ghcr.io/miwwa/sdl3-gen:latest
 
