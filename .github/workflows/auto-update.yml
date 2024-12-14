@@ -7,7 +7,7 @@ on: [ workflow_dispatch ]
 jobs:
   build-dockerfile:
     name: Build Dockerfile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,7 +31,7 @@ jobs:
   
   generate:
     name: Generate bindings
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ build-dockerfile ]
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
   
   build-lib:
     name: Build lib
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
 
   create-pr:
     name: Create PR
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
