@@ -531,6 +531,14 @@ internal static class UserProvidedData
         { ("SDL_GetAsyncIOResult", "outcome"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_asyncio.h:440:34
         { ("SDL_WaitAsyncIOResult", "outcome"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_asyncio.h:484:34
         { ("SDL_GetClosestFullscreenDisplayMode", "closest"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_video.h:708:34
+        { ("SDL_WaitAndAcquireGPUSwapchainTexture", "swapchain_texture"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_gpu.h:3641:34
+        { ("SDL_WaitAndAcquireGPUSwapchainTexture", "swapchain_texture_width"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_gpu.h:3641:34
+        { ("SDL_WaitAndAcquireGPUSwapchainTexture", "swapchain_texture_height"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_gpu.h:3641:34
+        { ("SDL_RenderTextureAffine", "texture"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_render.h:2105:34
+        { ("SDL_RenderTextureAffine", "srcrect"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_render.h:2105:34
+        { ("SDL_RenderTextureAffine", "origin"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_render.h:2105:34
+        { ("SDL_RenderTextureAffine", "right"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_render.h:2105:34
+        { ("SDL_RenderTextureAffine", "down"), PointerParameterIntent.Unknown }, // ./SDL/include/SDL3/SDL_render.h:2105:34
     };
 
     internal static readonly Dictionary<string, ReturnedCharPtrMemoryOwner> ReturnedCharPtrMemoryOwners = new()
@@ -595,30 +603,59 @@ internal static class UserProvidedData
 
     internal static readonly Dictionary<string, DelegateDefinition> DelegateDefinitions = new()
     {
-        { "SDL_AssertionHandler", new DelegateDefinition { ReturnType = "SDL_AssertState", Parameters = [("SDL_AssertData*", "data"), ("IntPtr", "userdata")] } }, // /usr/local/include/SDL3/SDL_assert.h:423:35
-        { "SDL_CleanupPropertyCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "value")] } }, // /usr/local/include/SDL3/SDL_properties.h:187:24
-        { "SDL_EnumeratePropertiesCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("uint", "props"), ("byte*", "name")] } }, // /usr/local/include/SDL3/SDL_properties.h:499:24
+        {
+            "SDL_AssertionHandler", new DelegateDefinition { ReturnType = "SDL_AssertState", Parameters = [("SDL_AssertData*", "data"), ("IntPtr", "userdata")] }
+        }, // /usr/local/include/SDL3/SDL_assert.h:423:35
+        {
+            "SDL_CleanupPropertyCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "value")] }
+        }, // /usr/local/include/SDL3/SDL_properties.h:187:24
+        {
+            "SDL_EnumeratePropertiesCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("uint", "props"), ("byte*", "name")] }
+        }, // /usr/local/include/SDL3/SDL_properties.h:499:24
         { "SDL_ThreadFunction", new DelegateDefinition { ReturnType = "int", Parameters = [("IntPtr", "data")] } }, // /usr/local/include/SDL3/SDL_thread.h:113:24
         { "SDL_TLSDestructorCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "value")] } }, // /usr/local/include/SDL3/SDL_thread.h:487:24
-        { "SDL_AudioStreamCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "stream"), ("int", "additional_amount"), ("int", "total_amount")] } }, // /usr/local/include/SDL3/SDL_audio.h:1527:24
-        { "SDL_AudioPostmixCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("SDL_AudioSpec*", "spec"), ("float*", "buffer"), ("int", "buflen")] } }, // /usr/local/include/SDL3/SDL_audio.h:1744:24
-        { "SDL_ClipboardDataCallback", new DelegateDefinition { ReturnType = "IntPtr", Parameters = [("IntPtr", "userdata"), ("byte*", "mime_type"), ("IntPtr", "size")] } }, // /usr/local/include/SDL3/SDL_clipboard.h:154:31
+        {
+            "SDL_AudioStreamCallback",
+            new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "stream"), ("int", "additional_amount"), ("int", "total_amount")] }
+        }, // /usr/local/include/SDL3/SDL_audio.h:1527:24
+        {
+            "SDL_AudioPostmixCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("SDL_AudioSpec*", "spec"), ("float*", "buffer"), ("int", "buflen")] }
+        }, // /usr/local/include/SDL3/SDL_audio.h:1744:24
+        {
+            "SDL_ClipboardDataCallback", new DelegateDefinition { ReturnType = "IntPtr", Parameters = [("IntPtr", "userdata"), ("byte*", "mime_type"), ("IntPtr", "size")] }
+        }, // /usr/local/include/SDL3/SDL_clipboard.h:154:31
         { "SDL_ClipboardCleanupCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata")] } }, // /usr/local/include/SDL3/SDL_clipboard.h:166:24
         { "SDL_EGLAttribArrayCallback", new DelegateDefinition { ReturnType = "IntPtr", Parameters = [] } }, // /usr/local/include/SDL3/SDL_video.h:246:34
         { "SDL_EGLIntArrayCallback", new DelegateDefinition { ReturnType = "IntPtr", Parameters = [] } }, // /usr/local/include/SDL3/SDL_video.h:247:31
-        { "SDL_HitTest", new DelegateDefinition { ReturnType = "SDL_HitTestResult", Parameters = [("IntPtr", "win"), ("SDL_Point*", "area"), ("IntPtr", "data")] } }, // /usr/local/include/SDL3/SDL_video.h:2328:37
-        { "SDL_DialogFileCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "filelist"), ("int", "filter")] } }, // /usr/local/include/SDL3/SDL_dialog.h:97:24
+        {
+            "SDL_HitTest", new DelegateDefinition { ReturnType = "SDL_HitTestResult", Parameters = [("IntPtr", "win"), ("SDL_Point*", "area"), ("IntPtr", "data")] }
+        }, // /usr/local/include/SDL3/SDL_video.h:2328:37
+        {
+            "SDL_DialogFileCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("IntPtr", "filelist"), ("int", "filter")] }
+        }, // /usr/local/include/SDL3/SDL_dialog.h:97:24
         { "SDL_EventFilter", new DelegateDefinition { ReturnType = "bool", Parameters = [("IntPtr", "userdata"), ("SDL_Event*", "evt")] } }, // /usr/local/include/SDL3/SDL_events.h:1283:24
-        { "SDL_EnumerateDirectoryCallback", new DelegateDefinition { ReturnType = "SDL_EnumerationResult", Parameters = [("IntPtr", "userdata"), ("byte*", "dirname"), ("byte*", "fname")] } }, // /usr/local/include/SDL3/SDL_filesystem.h:302:41
-        { "SDL_HintCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("byte*", "name"), ("byte*", "oldValue"), ("byte*", "newValue")] } }, // /usr/local/include/SDL3/SDL_hints.h:4189:23
-        { "SDL_AppInit_func", new DelegateDefinition { ReturnType = "SDL_AppResult", Parameters = [("IntPtr", "appstate"), ("int", "argc"), ("IntPtr", "argv")] } }, // /usr/local/include/SDL3/SDL_init.h:96:33
+        {
+            "SDL_EnumerateDirectoryCallback", new DelegateDefinition { ReturnType = "SDL_EnumerationResult", Parameters = [("IntPtr", "userdata"), ("byte*", "dirname"), ("byte*", "fname")] }
+        }, // /usr/local/include/SDL3/SDL_filesystem.h:302:41
+        {
+            "SDL_HintCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("byte*", "name"), ("byte*", "oldValue"), ("byte*", "newValue")] }
+        }, // /usr/local/include/SDL3/SDL_hints.h:4189:23
+        {
+            "SDL_AppInit_func", new DelegateDefinition { ReturnType = "SDL_AppResult", Parameters = [("IntPtr", "appstate"), ("int", "argc"), ("IntPtr", "argv")] }
+        }, // /usr/local/include/SDL3/SDL_init.h:96:33
         { "SDL_AppIterate_func", new DelegateDefinition { ReturnType = "SDL_AppResult", Parameters = [("IntPtr", "appstate")] } }, // /usr/local/include/SDL3/SDL_init.h:97:33
         { "SDL_AppEvent_func", new DelegateDefinition { ReturnType = "SDL_AppResult", Parameters = [("IntPtr", "appstate"), ("SDL_Event*", "evt")] } }, // /usr/local/include/SDL3/SDL_init.h:98:33
         { "SDL_AppQuit_func", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "appstate"), ("SDL_AppResult", "result")] } }, // /usr/local/include/SDL3/SDL_init.h:99:24
-        { "SDL_LogOutputFunction", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("int", "category"), ("SDL_LogPriority", "priority"), ("byte*", "message")] } }, // /usr/local/include/SDL3/SDL_log.h:474:24
+        {
+            "SDL_LogOutputFunction", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata"), ("int", "category"), ("SDL_LogPriority", "priority"), ("byte*", "message")] }
+        }, // /usr/local/include/SDL3/SDL_log.h:474:24
         { "SDL_X11EventHook", new DelegateDefinition { ReturnType = "bool", Parameters = [("IntPtr", "userdata"), ("IntPtr", "xevent")] } }, // /usr/local/include/SDL3/SDL_system.h:133:24
-        { "SDL_TimerCallback", new DelegateDefinition { ReturnType = "uint", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("uint", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:158:26
-        { "SDL_NSTimerCallback", new DelegateDefinition { ReturnType = "ulong", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("ulong", "interval")] } }, // /usr/local/include/SDL3/SDL_timer.h:220:26
+        {
+            "SDL_TimerCallback", new DelegateDefinition { ReturnType = "uint", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("uint", "interval")] }
+        }, // /usr/local/include/SDL3/SDL_timer.h:158:26
+        {
+            "SDL_NSTimerCallback", new DelegateDefinition { ReturnType = "ulong", Parameters = [("IntPtr", "userdata"), ("uint", "timerID"), ("ulong", "interval")] }
+        }, // /usr/local/include/SDL3/SDL_timer.h:220:26
         { "SDL_main_func", new DelegateDefinition { ReturnType = "int", Parameters = [("int", "argc"), ("IntPtr", "argv")] } }, // /usr/local/include/SDL3/SDL_main.h:399:23
         { "SDL_MainThreadCallback", new DelegateDefinition { ReturnType = "void", Parameters = [("IntPtr", "userdata")] } }, // ./SDL/include/SDL3/SDL_init.h:271:24
     };
