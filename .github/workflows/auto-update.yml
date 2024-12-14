@@ -56,10 +56,10 @@ jobs:
       
       # msbuild is not available for Ubuntu 24 at the moment.
       #      - name: msbuild SDL3
-      #        run: msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
+      #        run: msbuild -restore ./SDL3/SDL3-CS.Legacy.sln /p:Configuration=Release
 
       - name: Build SDL3.Core
-        run: dotnet build SDL3/SDL3.Core.csproj -c Release
+        run: dotnet build ./SDL3/SDL3.Core.csproj -c Release
 
       - name: Get SDL repo's run info
         run: |
