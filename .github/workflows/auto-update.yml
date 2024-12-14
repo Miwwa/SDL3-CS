@@ -54,20 +54,40 @@ jobs:
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: sdl3-gen          
-      
+          name: sdl3-gen
+
       - name: Display structure of downloaded files
         run: ls -R
-      
+
       - name: dotnet build GenerateBindings
         run: dotnet build GenerateBindings -c Release
-      
+
       - name: msbuild SDL3
         run: msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
-      
+
       - name: dotnet build SDL3.Core
         run: dotnet build SDL3/SDL3.Core.csproj -c Release
+
+  create-pr:
+    name: Create PR
+    runs-on: ubuntu-latest
+    needs: [ generate ]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: update SDL
+          title: [Automatic] Update SDL
+          branch: sdl-update
+          delete-branch: true
+          body: |
+            Automatic SDL bindings update
