@@ -48,19 +48,6 @@ jobs:
       - name: Update SDL submodule
         run: git submodule update --remote SDL
 
-      - name: Generate sources
-        run: docker run --rm -v .:/app -w /app --name sdl3-cs ghcr.io/miwwa/sdl3-gen:latest
-
-      - name: Build GenerateBindings
-        run: dotnet build GenerateBindings -c Release
-      
-      # msbuild is not available for Ubuntu 24 at the moment.
-      #      - name: msbuild SDL3
-      #        run: msbuild -restore ./SDL3/SDL3-CS.Legacy.sln /p:Configuration=Release
-
-      - name: Build SDL3.Core
-        run: dotnet build ./SDL3/SDL3.Core.csproj -c Release
-
       - name: Get SDL repo's run info
         run: |
           SDL_COMMIT=$(git ls-tree HEAD SDL --object-only)
@@ -83,7 +70,16 @@ jobs:
           mkdir -p ./native/win-x64
           cp $(find ./downloads/dist -type d -name "*Windows-VC*")/bin/SDL3.dll ./native/win-x64/SDL3.dll
           cp $(find ./downloads/dist -type d -name "*Windows-VC*")/lib/SDL3.lib ./native/win-x64/SDL3.lib
-          
+
+      - name: Generate sources
+        run: docker run --rm -v .:/app -w /app --name sdl3-cs ghcr.io/miwwa/sdl3-gen:latest
+
+      - name: Build GenerateBindings
+        run: dotnet build GenerateBindings -c Release
+
+      - name: Build SDL3.Core
+        run: dotnet build ./SDL3/SDL3.Core.csproj -c Release
+        
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
