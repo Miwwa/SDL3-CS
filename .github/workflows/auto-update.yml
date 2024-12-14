@@ -55,6 +55,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup .Net8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x.x'
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -66,8 +71,9 @@ jobs:
       - name: dotnet build GenerateBindings
         run: dotnet build GenerateBindings -c Release
 
-      - name: msbuild SDL3
-        run: msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
+#      msbuild is not available for Ubuntu 24 at the moment.
+#      - name: msbuild SDL3
+#        run: msbuild -restore SDL3-CS.Legacy.sln /p:Configuration=Release
 
       - name: dotnet build SDL3.Core
         run: dotnet build SDL3/SDL3.Core.csproj -c Release
@@ -86,7 +92,7 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R
-        
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
