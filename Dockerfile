@@ -1,11 +1,16 @@
 ﻿FROM ubuntu:noble
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y
-RUN apt install -y wget software-properties-common
+# add Github CLI apt source 
+RUN (type -p wget >/dev/null || (apt update && apt-get install -y wget)) \
+    	&& mkdir -p -m 755 /etc/apt/keyrings \
+            && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+            && cat $out | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    	&& chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    	&& apt update -y;
 
-# install dotnet
-RUN apt install -y dotnet-sdk-8.0
+RUN apt install -y software-properties-common gh unzip dotnet-sdk-8.0
 
 # install llvm 18 and cmake
 RUN wget -qO- https://apt.llvm.org/llvm.sh | bash -s -- 18
@@ -20,12 +25,7 @@ WORKDIR /c2ffi
 RUN rm -rf build && mkdir -p build && cd build && \
     cmake -DBUILD_CONFIG=Release .. && make
 
-# Build GenerateBindings project
-RUN mkdir -p /GenerateBindings
-COPY /GenerateBindings /GenerateBindings
-WORKDIR /GenerateBindings
-RUN dotnet publish GenerateBindings.csproj -c Release
-
+ARG CACHE=3
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
