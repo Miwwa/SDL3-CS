@@ -9,8 +9,12 @@ jobs:
     name: Generate bindings
     runs-on: ubuntu-24.04
     env:
-      SDL_REPO: https://github.com/libsdl-org/SDL
       GH_TOKEN: ${{ github.token }}
+      CC: clang-18
+      CXX: clang++-18
+      SDL_REPO: https://github.com/libsdl-org/SDL
+      SDL_WIN_X64: SDL-VC-x64
+      SDL_OSX_ARM64: SDL-macos-arm64-gnu
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,7 +50,7 @@ jobs:
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
         run: |
           cd c2ffi && rm -rf build && mkdir -p build && cd build && \
-          CC="/usr/bin/clang-18" CXX="/usr/bin/clang++-18" cmake -DBUILD_CONFIG=Release .. && make
+          cmake -DBUILD_CONFIG=Release .. && make
 
       - name: Generate ffi.json
         run: ./c2ffi/build/bin/c2ffi -i ./SDL/include -o ./GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.h
@@ -74,7 +78,7 @@ jobs:
       - name: Download native SDL libs
         uses: actions/download-artifact@v4
         with:
-          pattern: SDL-{VC-x64,macos-arm64}*
+          pattern: "{${{ env.SDL_WIN_X64 }},${{ env.SDL_OSX_ARM64 }}}"
           path: downloads
           merge-multiple: true
           github-token: ${{ github.token }}
@@ -83,11 +87,24 @@ jobs:
 
       - name: Copy win-x64
         run: |
-          mkdir -p ./native/win-x64
-          cd ./downloads/dist && unzip $(find . -type f -name "*Windows-VC*")
-          cp $(find ./downloads/dist -type d -name "*Windows-VC*")/bin/SDL3.dll ./native/win-x64/SDL3.dll
-          cp $(find ./downloads/dist -type d -name "*Windows-VC*")/lib/SDL3.lib ./native/win-x64/SDL3.lib
+          NATIVE_PATH=$(realpath ./native)
+          DOWNLOADS_PATH=$(realpath ./downloads)
+          cd "$DOWNLOADS_PATH/$SDL_WIN_X64/dist" || exit
+          unzip "$(find . -type f -name "*Windows-VC*")"
+          mkdir -p "$NATIVE_PATH/win-x64"
+          cp "$(find . -type d -name "*Windows-VC*")/bin/SDL3.dll" "$NATIVE_PATH/win-x64/SDL3.dll"
+          cp "$(find . -type d -name "*Windows-VC*")/lib/SDL3.lib" "$NATIVE_PATH/win-x64/SDL3.lib"
 
+      - name: Copy osx-arm64
+        run: |
+          NATIVE_PATH=$(realpath ./native)
+          DOWNLOADS_PATH=$(realpath ./downloads)
+          cd "$DOWNLOADS_PATH/$SDL_OSX_ARM64/dist" || exit
+          tar -xzf "$(find . -type f -name "*-macOS.tar.gz")"
+          mkdir -p "$NATIVE_PATH/osx-arm64"
+          cp "$(find . -type d -name "*-macOS")/lib/libSDL3.0.dylib" "$NATIVE_PATH/osx-arm64/libSDL3.0.dylib"
+          cp "$(find . -type d -name "*-macOS")/lib/libSDL3.a"       "$NATIVE_PATH/osx-arm64/libSDL3.a"
+          
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
