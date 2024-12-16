@@ -5,43 +5,13 @@ name: Auto update
 on: [ workflow_dispatch ]
 
 jobs:
-  build-dockerfile:
-    name: Build Dockerfile
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/miwwa/sdl3-gen:latest
-          cache-from: type=registry,ref=ghcr.io/miwwa/sdl3-gen:buildcache
-          cache-to: type=registry,ref=ghcr.io/miwwa/sdl3-gen:buildcache,mode=max
-  
   generate:
     name: Generate bindings
     runs-on: ubuntu-24.04
-    needs: [ build-dockerfile ]
-    env: 
+    env:
       SDL_REPO: https://github.com/libsdl-org/SDL
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Setup .Net 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.x.x'
-
       - uses: actions/checkout@v4
         with:
           submodules: true
@@ -49,38 +19,75 @@ jobs:
       - name: Update SDL submodule
         run: git submodule update --remote SDL
 
+      - name: Setup gh
+        uses: wusatosi/setup-gh@v1
+
+      - name: Install .Net 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x.x'
+
+      - name: Cache c2ffi
+        id: cache-c2ffi
+        uses: actions/cache@v4
+        with:
+          path: ./c2ffi/build/bin/c2ffi
+          key: c2ffi-${{ hashFiles('./c2ffi/build/bin') }}
+          
+      - name: Install LLVM, Clang and CMake
+        if: steps.cache-c2ffi.outputs.cache-hit != 'true'
+        run: |
+          sudo apt update -y
+          sudo apt install -y wget software-properties-common
+          wget -qO- https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
+          sudo apt install -y libclang-18-dev libclang-cpp18-dev cmake
+          
+      - name: Build c2ffi
+        if: steps.cache-c2ffi.outputs.cache-hit != 'true'
+        run: |
+          cd c2ffi && rm -rf build && mkdir -p build && cd build && \
+          CC="/usr/bin/clang-18" CXX="/usr/bin/clang++-18" cmake -DBUILD_CONFIG=Release .. && make
+
+      - name: Generate ffi.json
+        run: ./c2ffi/build/bin/c2ffi -i ./SDL/include -o ./GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.h
+
+      - name: Build GenerateBindings
+        run: dotnet publish ./GenerateBindings/GenerateBindings.csproj -c Release
+
+      - name: Generate SDL3.Legacy.cs
+        run: ./GenerateBindings/bin/Release/net8.0/publish/GenerateBindings ./SDL
+
+      - name: Generate SDL3.Core.cs
+        run: ./GenerateBindings/bin/Release/net8.0/publish/GenerateBindings ./SDL --core
+
+      - name: Build SDL3.Core
+        run: dotnet build ./SDL3/SDL3.Core.csproj -c Release
+
       - name: Get SDL repo's run info
         run: |
+          gh version
           SDL_COMMIT=$(git ls-tree HEAD SDL --object-only)
-          RUN_ID=$(gh run list -c $SDL_COMMIT --json databaseId --jq '.[] | .databaseId' -R $SDL_REPO)
-      
+          echo "SDL_COMMIT=$SDL_COMMIT"
+          RUN_ID=$(gh run list --commit $SDL_COMMIT --json databaseId --jq '.[] | .databaseId' -R $SDL_REPO)
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          
       - name: Download native SDL libs
         uses: actions/download-artifact@v4
         with:
           pattern: SDL-{VC-x64,macos-arm64}*
           path: downloads
           merge-multiple: true
-          repository: ${{ env.SDL_REPO }}
+          github-token: ${{ github.token }}
+          repository: libsdl-org/SDL
           run-id: ${{ env.RUN_ID }}
-          
-      - name: Unzip win-x64
-        run: cd ./downloads/dist && unzip $(find -type f -name "*Windows-VC*")
-          
+
       - name: Copy win-x64
         run: |
           mkdir -p ./native/win-x64
+          cd ./downloads/dist && unzip $(find . -type f -name "*Windows-VC*")
           cp $(find ./downloads/dist -type d -name "*Windows-VC*")/bin/SDL3.dll ./native/win-x64/SDL3.dll
           cp $(find ./downloads/dist -type d -name "*Windows-VC*")/lib/SDL3.lib ./native/win-x64/SDL3.lib
 
-      - name: Generate sources
-        run: docker run --rm -v .:/app -w /app --name sdl3-cs ghcr.io/miwwa/sdl3-gen:latest
-
-      - name: Build GenerateBindings
-        run: dotnet build GenerateBindings -c Release
-
-      - name: Build SDL3.Core
-        run: dotnet build ./SDL3/SDL3.Core.csproj -c Release
-        
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
@@ -88,5 +95,4 @@ jobs:
           title: "[Automatic] Update SDL"
           branch: sdl-update
           delete-branch: true
-          body: |
-            Automatic SDL binding
+          body: Automatic SDL binding
