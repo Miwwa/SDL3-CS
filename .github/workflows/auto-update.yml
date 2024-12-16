@@ -44,7 +44,7 @@ jobs:
           sudo apt update -y
           sudo apt install -y wget software-properties-common
           wget -qO- https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
-          sudo apt install -y libclang-16-dev libclang-cpp16-dev libclang-18-dev libclang-cpp18-dev cmake
+          sudo apt install -y llvm-18 clang-18 libclang-18-dev libclang-cpp18-dev cmake
           
       - name: Build c2ffi
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
