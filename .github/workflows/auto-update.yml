@@ -2,7 +2,12 @@ name: Auto update
 
 # Run only manually for now
 # todo: automate updates for SDL3 releases 
-on: [ workflow_dispatch, push ]
+on: 
+  workflow_dispatch:
+  push: 
+    paths:
+      - '.github/workflows/**'
+      - 'GenerateBindings/**.cs'
 
 jobs:
   generate:
@@ -68,9 +73,8 @@ jobs:
 
       - name: Get SDL repo's run info
         run: |
-          gh version
           SDL_COMMIT=$(git ls-tree HEAD SDL --object-only)
-          echo "SDL_COMMIT=$SDL_COMMIT"
+          echo "SDL_COMMIT=$SDL_COMMIT" >> $GITHUB_ENV
           RUN_ID=$(gh run list --commit $SDL_COMMIT --json databaseId --jq '.[] | .databaseId' -R $SDL_REPO)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
 
@@ -87,7 +91,6 @@ jobs:
       - name: Copy win-x64
         run: |
           NATIVE_PATH=$(realpath ./native)
-          ls -1R "./downloads"
           cd "./downloads/$SDL_WIN_X64/dist" || exit
           unzip "$(find . -type f -name "*Windows-VC*")"
           mkdir -p "$NATIVE_PATH/win-x64"
