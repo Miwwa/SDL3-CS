@@ -2,7 +2,7 @@ name: Auto update
 
 # Run only manually for now
 # todo: automate updates for SDL3 releases 
-on: [ workflow_dispatch ]
+on: [ workflow_dispatch, push ]
 
 jobs:
   generate:
@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./c2ffi/build/bin
-          key: c2ffi-${{ hashFiles('./c2ffi/build/bin') }}
+          key: c2ffi-${{ runner.os }}
           
       - name: Install LLVM, Clang and CMake
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
@@ -50,7 +50,7 @@ jobs:
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
         run: |
           cd c2ffi && rm -rf build && mkdir -p build && cd build && \
-          cmake -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm -DBUILD_CONFIG=Release .. && make
+          cmake -DCMAKE_PREFIX_PATH=/usr/lib/llvm-18 -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm -DBUILD_CONFIG=Release .. && make
 
       - name: Generate ffi.json
         run: ./c2ffi/build/bin/c2ffi -i ./SDL/include -o ./GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.h
