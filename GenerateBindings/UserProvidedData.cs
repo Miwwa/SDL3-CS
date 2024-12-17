@@ -9,6 +9,7 @@ internal static class UserProvidedData
         Ref,
         Out,
         Array,
+        OutArray,
         Pointer,
         In,
     }
@@ -116,13 +117,6 @@ internal static class UserProvidedData
         { ("SDL_GetRGBA", "g"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_pixels.h:1014:34
         { ("SDL_GetRGBA", "b"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_pixels.h:1014:34
         { ("SDL_GetRGBA", "a"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_pixels.h:1014:34
-        { ("SDL_RectToFRect", "rect"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:126:23
-        { ("SDL_RectToFRect", "frect"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_rect.h:126:23
-        { ("SDL_PointInRect", "p"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:155:23
-        { ("SDL_PointInRect", "r"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:155:23
-        { ("SDL_RectEmpty", "r"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:179:23
-        { ("SDL_RectsEqual", "a"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:203:23
-        { ("SDL_RectsEqual", "b"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:203:23
         { ("SDL_HasRectIntersection", "A"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:224:34
         { ("SDL_HasRectIntersection", "B"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:224:34
         { ("SDL_GetRectIntersection", "A"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:241:34
@@ -139,13 +133,6 @@ internal static class UserProvidedData
         { ("SDL_GetRectAndLineIntersection", "Y1"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:294:34
         { ("SDL_GetRectAndLineIntersection", "X2"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:294:34
         { ("SDL_GetRectAndLineIntersection", "Y2"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:294:34
-        { ("SDL_PointInRectFloat", "p"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:320:23
-        { ("SDL_PointInRectFloat", "r"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:320:23
-        { ("SDL_RectEmptyFloat", "r"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:344:23
-        { ("SDL_RectsEqualEpsilon", "a"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:374:23
-        { ("SDL_RectsEqualEpsilon", "b"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:374:23
-        { ("SDL_RectsEqualFloat", "a"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:409:23
-        { ("SDL_RectsEqualFloat", "b"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:409:23
         { ("SDL_HasRectIntersectionFloat", "A"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:427:34
         { ("SDL_HasRectIntersectionFloat", "B"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:427:34
         { ("SDL_GetRectIntersectionFloat", "A"), PointerParameterIntent.Ref }, // /usr/local/include/SDL3/SDL_rect.h:444:34
@@ -339,7 +326,7 @@ internal static class UserProvidedData
         { ("SDL_CreateColorCursor", "surface"), PointerParameterIntent.IntPtr }, // /usr/local/include/SDL3/SDL_mouse.h:460:42
         { ("SDL_GetTouchDevices", "count"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_touch.h:93:43
         { ("SDL_GetTouchFingers", "count"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_touch.h:129:43
-        { ("SDL_PeepEvents", "events"), PointerParameterIntent.Array }, // /usr/local/include/SDL3/SDL_events.h:1047:33
+        { ("SDL_PeepEvents", "events"), PointerParameterIntent.OutArray }, // /usr/local/include/SDL3/SDL_events.h:1047:33
         { ("SDL_PollEvent", "event"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_events.h:1178:34
         { ("SDL_WaitEvent", "event"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_events.h:1200:34
         { ("SDL_WaitEventTimeout", "event"), PointerParameterIntent.Out }, // /usr/local/include/SDL3/SDL_events.h:1228:34
