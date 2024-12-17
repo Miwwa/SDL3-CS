@@ -35,7 +35,7 @@ jobs:
         id: cache-c2ffi
         uses: actions/cache@v4
         with:
-          path: ./c2ffi/build/bin/c2ffi
+          path: ./c2ffi/build/bin
           key: c2ffi-${{ hashFiles('./c2ffi/build/bin') }}
           
       - name: Install LLVM, Clang and CMake
@@ -50,7 +50,7 @@ jobs:
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
         run: |
           cd c2ffi && rm -rf build && mkdir -p build && cd build && \
-          cmake -DCMAKE_PREFIX_PATH=/usr/lib/llvm-18 -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm -DBUILD_CONFIG=Release .. && make
+          cmake -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm -DBUILD_CONFIG=Release .. && make
 
       - name: Generate ffi.json
         run: ./c2ffi/build/bin/c2ffi -i ./SDL/include -o ./GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.h
@@ -79,8 +79,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: "{${{ env.SDL_WIN_X64 }},${{ env.SDL_OSX_ARM64 }}}"
-          path: downloads
-          merge-multiple: true
+          path: ./downloads
+          merge-multiple: false
           github-token: ${{ github.token }}
           repository: libsdl-org/SDL
           run-id: ${{ env.RUN_ID }}
@@ -88,8 +88,8 @@ jobs:
       - name: Copy win-x64
         run: |
           NATIVE_PATH=$(realpath ./native)
-          DOWNLOADS_PATH=$(realpath ./downloads)
-          cd "$DOWNLOADS_PATH/$SDL_WIN_X64/dist" || exit
+          ls -1R "./downloads"
+          cd "./downloads/$SDL_WIN_X64/dist" || exit
           unzip "$(find . -type f -name "*Windows-VC*")"
           mkdir -p "$NATIVE_PATH/win-x64"
           cp "$(find . -type d -name "*Windows-VC*")/bin/SDL3.dll" "$NATIVE_PATH/win-x64/SDL3.dll"
@@ -98,8 +98,7 @@ jobs:
       - name: Copy osx-arm64
         run: |
           NATIVE_PATH=$(realpath ./native)
-          DOWNLOADS_PATH=$(realpath ./downloads)
-          cd "$DOWNLOADS_PATH/$SDL_OSX_ARM64/dist" || exit
+          cd "./downloads/$SDL_OSX_ARM64/dist" || exit
           tar -xzf "$(find . -type f -name "*-macOS.tar.gz")"
           mkdir -p "$NATIVE_PATH/osx-arm64"
           cp "$(find . -type d -name "*-macOS")/lib/libSDL3.0.dylib" "$NATIVE_PATH/osx-arm64/libSDL3.0.dylib"
