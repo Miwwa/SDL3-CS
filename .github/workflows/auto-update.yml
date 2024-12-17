@@ -31,21 +31,20 @@ jobs:
         with:
           dotnet-version: '8.x.x'
 
+      - name: Install LLVM, Clang and CMake
+        run: |
+          sudo apt update -y
+          sudo apt install -y wget software-properties-common
+          wget -qO- https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
+          sudo apt install -y llvm-18 clang-18 libclang-18-dev libclang-cpp18-dev cmake
+
       - name: Cache c2ffi
         id: cache-c2ffi
         uses: actions/cache@v4
         with:
           path: ./c2ffi/build/bin
           key: c2ffi-${{ runner.os }}
-          
-      - name: Install LLVM, Clang and CMake
-        if: steps.cache-c2ffi.outputs.cache-hit != 'true'
-        run: |
-          sudo apt update -y
-          sudo apt install -y wget software-properties-common
-          wget -qO- https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
-          sudo apt install -y llvm-18 clang-18 libclang-18-dev libclang-cpp18-dev cmake
-          
+
       - name: Build c2ffi
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
         run: |
@@ -74,7 +73,7 @@ jobs:
           echo "SDL_COMMIT=$SDL_COMMIT"
           RUN_ID=$(gh run list --commit $SDL_COMMIT --json databaseId --jq '.[] | .databaseId' -R $SDL_REPO)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
-          
+
       - name: Download native SDL libs
         uses: actions/download-artifact@v4
         with:
@@ -103,7 +102,7 @@ jobs:
           mkdir -p "$NATIVE_PATH/osx-arm64"
           cp "$(find . -type d -name "*-macOS")/lib/libSDL3.0.dylib" "$NATIVE_PATH/osx-arm64/libSDL3.0.dylib"
           cp "$(find . -type d -name "*-macOS")/lib/libSDL3.a"       "$NATIVE_PATH/osx-arm64/libSDL3.a"
-          
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
