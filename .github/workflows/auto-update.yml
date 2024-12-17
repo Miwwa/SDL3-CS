@@ -49,11 +49,8 @@ jobs:
       - name: Build c2ffi
         if: steps.cache-c2ffi.outputs.cache-hit != 'true'
         run: |
-          ls -1 /usr/lib | grep llvm
-          ls -1 /usr/lib/llvm-1?/lib/libclangBasic.a
           cd c2ffi && rm -rf build && mkdir -p build && cd build && \
-          -DCMAKE_PREFIX_PATH=/usr/lib/llvm-18 -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm \
-          cmake -DBUILD_CONFIG=Release .. && make
+          cmake -DCMAKE_PREFIX_PATH=/usr/lib/llvm-18 -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm -DBUILD_CONFIG=Release .. && make
 
       - name: Generate ffi.json
         run: ./c2ffi/build/bin/c2ffi -i ./SDL/include -o ./GenerateBindings/assets/ffi.json ./GenerateBindings/assets/ffi.h
