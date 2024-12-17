@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <DefaultItemExcludes>$(DefaultItemExcludes);SDL3.Legacy.cs</DefaultItemExcludes>
-    </PropertyGroup>
+	<PropertyGroup>
+		<DefaultItemExcludes>$(DefaultItemExcludes);SDL3.Legacy.cs</DefaultItemExcludes>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<SDLArch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</SDLArch>
@@ -22,7 +22,7 @@
 		<SDLNativeLib Condition=" '$(SDLNativeLib)' == '' And '$([MSBuild]::IsOSPlatform(Linux))' ">linux-$(SDLArch.ToLower())\libSDL3.so</SDLNativeLib>
 		<SDLNativeLib Condition=" '$(SDLNativeLib)' == '' And '$([MSBuild]::IsOSPlatform(OSX))' ">osx-$(SDLArch.ToLower())\libSDL3.dylib</SDLNativeLib>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Content Include="$(MSBuildThisFileDirectory)..\native\$(SDLNativeLib)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
